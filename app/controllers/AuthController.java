@@ -28,7 +28,7 @@ public class AuthController extends Controller {
         if(user != null && BCrypt.checkpw(password, user.getPassword())){
             Calendar calendar = Calendar.getInstance();
             Date now = calendar.getTime();
-            calendar.add(Calendar.MINUTE, 20);
+            calendar.add(Calendar.HOUR, 1);
             Date expDate = calendar.getTime();
             String jwt = Jwts.builder()
                     .setSubject(email)
