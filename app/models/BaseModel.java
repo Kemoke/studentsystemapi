@@ -1,8 +1,7 @@
 package models;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Id;
 import services.DBConnection;
 
@@ -14,6 +13,11 @@ public class BaseModel {
         return id.toString();
     }
 
+    @JsonIgnore
+    public ObjectId getRawId(){
+        return id;
+    }
+
     public void save(){
         DBConnection.getDatastore().save(this);
     }
@@ -22,10 +26,4 @@ public class BaseModel {
         DBConnection.getDatastore().delete(this);
     }
 
-    @Override
-    public String toString() {
-        return "BaseModel{" +
-                "id=" + id +
-                '}';
-    }
 }

@@ -1,17 +1,21 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
 # Auth
 POST /auth/login                    controllers.AuthController.login()
+POST /auth/register                 controllers.AuthController.register()
 
-# An example controller showing a sample home page
-GET     /users                      controllers.UserController.listUsers()
-POST    /users                      controllers.UserController.addUser()
+# User routes
+GET     /users                      controllers.UserController.list()
+POST    /users                      controllers.UserController.add()
 GET     /users/self                 controllers.UserController.getSelf()
-GET     /users/:id                  controllers.UserController.getUser(id)
-PUT     /users/:id                  controllers.UserController.editUser(id)
-DELETE  /users/:id                  controllers.UserController.deleteUser(id)
-# An example controller showing how to use dependency injection
+GET     /users/:id                  controllers.UserController.get(id)
+PUT     /users/:id                  controllers.UserController.edit(id)
+DELETE  /users/:id                  controllers.UserController.delete(id)
+
+# Department routes
+GET /departments                    controllers.DepartmentController.list()
+POST /departments                   controllers.DepartmentController.add()
+GET /departments/:id                controllers.DepartmentController.get(id)
+PUT /departments/:id                controllers.DepartmentController.edit(id)
+DELETE /departments/:id             controllers.DepartmentController.delete(id)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

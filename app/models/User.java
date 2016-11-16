@@ -1,8 +1,13 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Reference;
+import services.DBConnection;
+
+import java.util.List;
 
 @Entity
 public class User extends BaseModel {
@@ -11,6 +16,11 @@ public class User extends BaseModel {
     private String password;
     @Indexed(unique = true)
     private String email;
+    private int userType;
+    @Reference
+    private Student student;
+    @Reference
+    private Instructor instructor;
 
     public String getUsername() {
         return username;
@@ -37,12 +47,59 @@ public class User extends BaseModel {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public int getUserType() {
+        return userType;
     }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
+
+    public static List<User> getAll(){
+        return DBConnection.getDatastore()
+                .createQuery(User.class)
+                .asList();
+    }
+
+    public static List<User> getAllWithField(String field, String value){
+        return DBConnection.getDatastore()
+                .createQuery(User.class)
+                .field(field)
+                .equal(value)
+                .asList();
+    }
+
+    public static User findByID(String id){
+        return DBConnection.getDatastore()
+                .get(User.class, new ObjectId(id));
+    }
+
+    public static User findByID(ObjectId id){
+        return DBConnection.getDatastore()
+                .get(User.class, id);
+    }
+
+    public static User findByField(String field, String value){
+        return DBConnection.getDatastore()
+                .createQuery(User.class)
+                .field(field).equal(value)
+                .get();
+    }
+
 }

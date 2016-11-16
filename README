@@ -12,3 +12,28 @@ udjite u root folder i ukucajte u konzoli 'activator run'.
 Prvi put ce malo duze trebati da se pokrene dok skine dependencije a posle ce brze.
 
 Pisace na kraju listening on port 9000 i to je to udjete na localhost:9000;
+--------------------------------------------------------------------------------------
+API HOST: https://api.sis.kemoke.net
+
+API ROUTES:
+
+POST    /auth/login                 form params: email, password            return: jwt token
+POST    /auth/register              form params: username, email, password  return: user
+
+Za ove dolje rute treba staviti u header 'X-Auth-Token' jwt token iz login rute.
+Ako istekne token, nevalja ili ga nema izbacice 401 error sa porukom.
+
+# User routes
+GET     /users                      form params: none                       return: user list
+POST    /users                      form params: username, email, password  return: added user
+GET     /users/self                 form params: none                       return: logged in user
+GET     /users/:id                  form params: none                       return: user by id
+PUT     /users/:id                  form params: username, email            return: edited user
+DELETE  /users/:id                  form params: none                       return: "deleted"
+
+# Department routes
+GET     /departments                form params: none                       return: dept list
+POST    /departments                form params: name                       return: added dept
+GET     /departments/:id            form params: none                       return: dept by id
+PUT     /departments/:id            form params: name                       return: edited dept
+DELETE  /departments/:id            form params: none                       return: "deleted"

@@ -1,76 +1,66 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import filters.Auth;
+import filters.AdminAuth;
 import models.User;
-import org.bson.types.ObjectId;
 import org.mindrot.jbcrypt.BCrypt;
-import org.mongodb.morphia.Datastore;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import services.DBConnection;
 
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by kemoke on 11/15/16.
- */
 public class UserController extends Controller {
 
-    @Security.Authenticated(Auth.class)
-    public Result listUsers(){
-        Datastore datastore = DBConnection.getDatastore();
-        List<User> users = datastore.createQuery(User.class).asList();
-        JsonNode usersJson = Json.toJson(users);
-        return ok(usersJson);
+    @Security.Authenticated(AdminAuth.class)
+    public Result list(){
+        List<User> users = User.getAll();
+        return ok(Json.toJson(users));
     }
 
-    @Security.Authenticated(Auth.class)
-    @BodyParser.Of(BodyParser.Json.class)
-    public Result addUser(){
-        JsonNode request = request().body().asJson();
+    @Security.Authenticated(AdminAuth.class)
+    @BodyParser.Of(BodyParser.FormUrlEncoded.class)
+    public Result add(){
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
         User newUser = new User();
-        String rawPass = request.findPath("password").textValue();
+        String rawPass = params.get("password")[0];
         String hashPass = BCrypt.hashpw(rawPass, BCrypt.gensalt());
         newUser.setPassword(hashPass);
-        newUser.setUsername(request.findPath("username").textValue());
-        newUser.setEmail(request.findPath("email").textValue());
+        newUser.setUsername(params.get("username")[0]);
+        newUser.setEmail(params.get("email")[0]);
         newUser.save();
-        JsonNode user = Json.toJson(newUser);
-        return ok(user);
+        return ok(Json.toJson(newUser));
     }
 
-    @Security.Authenticated(Auth.class)
-    public Result getUser(String id){
-        User user = DBConnection.getDatastore().get(User.class, new ObjectId(id));
-        JsonNode userJson = Json.toJson(user);
-        return ok(userJson);
+    @Security.Authenticated(AdminAuth.class)
+    public Result get(String id){
+        User user = User.findByID(id);
+        return ok(Json.toJson(user));
     }
 
-    @Security.Authenticated(Auth.class)
+    @Security.Authenticated(AdminAuth.class)
     public Result getSelf(){
-        User user = DBConnection.getDatastore().createQuery(User.class).field("email").equal(request().username()).get();
-        JsonNode userJson = Json.toJson(user);
-        return ok(userJson);
+        String username = request().username();
+        User user = User.findByField("email", username);
+        return ok(Json.toJson(user));
     }
 
-    @Security.Authenticated(Auth.class)
-    public Result editUser(String id){
-        JsonNode request = request().body().asJson();
-        User user = DBConnection.getDatastore().get(User.class, new ObjectId(id));
-        user.setUsername(request.findPath("username").textValue());
-        user.setEmail(request.findPath("email").textValue());
+    @Security.Authenticated(AdminAuth.class)
+    @BodyParser.Of(BodyParser.FormUrlEncoded.class)
+    public Result edit(String id){
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        User user = User.findByID(id);
+        user.setUsername(params.get("username")[0]);
+        user.setEmail(params.get("email")[0]);
         user.save();
-        JsonNode userJson = Json.toJson(user);
-        return ok(userJson);
+        return ok(Json.toJson(user));
     }
 
-    @Security.Authenticated(Auth.class)
-    public Result deleteUser(String id){
-        User user = DBConnection.getDatastore().get(User.class, new ObjectId(id));
+    @Security.Authenticated(AdminAuth.class)
+    public Result delete(String id){
+        User user = User.findByID(id);
         user.remove();
         return ok("deleted");
     }

@@ -1,6 +1,6 @@
 package filters;
 
-import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import models.User;
@@ -8,21 +8,26 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import services.AppConfig;
-import services.DBConnection;
 
-import java.sql.Struct;
+import java.time.Instant;
+import java.util.Date;
 
-/**
- * Created by kemoke on 11/15/16.
- */
-public class Auth extends Security.Authenticator{
+public class AdminAuth extends Security.Authenticator{
 
     @Override
     public String getUsername(Http.Context ctx) {
         String tokenString = getToken(ctx);
         try{
-            String email = Jwts.parser().setSigningKey(AppConfig.JWTKey).parseClaimsJws(tokenString).getBody().getSubject();
-            User user = DBConnection.getDatastore().createQuery(User.class).field("email").equal(email).get();
+            Claims jwt = Jwts.parser().setSigningKey(AppConfig.JWTKey)
+                    .parseClaimsJws(tokenString).getBody();
+            if(jwt.getExpiration().getTime() < Date.from(Instant.now()).getTime()){
+                return null;
+            }
+            String email = jwt.getSubject();
+            User user = User.findByField("email", email);
+            if(user.getUserType() != 0){
+                return null;
+            }
             return user.getEmail();
         }catch (SignatureException | IllegalArgumentException | NullPointerException e){
             return null;
