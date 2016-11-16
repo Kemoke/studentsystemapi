@@ -37,3 +37,4 @@ POST    /departments                form params: name                       retu
 GET     /departments/:id            form params: none                       return: dept by id
 PUT     /departments/:id            form params: name                       return: edited dept
 DELETE  /departments/:id            form params: none                       return: "deleted"
+a
