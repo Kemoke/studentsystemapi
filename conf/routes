@@ -17,5 +17,26 @@ GET /departments/:id                controllers.DepartmentController.get(id)
 PUT /departments/:id                controllers.DepartmentController.edit(id)
 DELETE /departments/:id             controllers.DepartmentController.delete(id)
 
+# Program routes
+GET /programs                      controllers.ProgramController.list()
+POST /programs                     controllers.ProgramController.add()
+GET /programs/:id                  controllers.ProgramController.get(id)
+PUT /programs/:id                  controllers.ProgramController.edit(id)
+DELETE /programs/:id               controllers.ProgramController.delete(id)
+
+# Course routes
+GET /courses                       controllers.CourseController.list()
+POST /courses                      controllers.CourseController.add()
+GET /courses/:id                   controllers.CourseController.get(id)
+PUT /courses/:id                   controllers.CourseController.edit(id)
+DELETE /courses/:id                controllers.CourseController.delete(id)
+
+# Section routes
+GET /sections                      controllers.SectionController.list()
+POST /sections                     controllers.SectionController.add()
+GET /sections/:id                  controllers.SectionController.get(id)
+PUT /sections/:id                  controllers.SectionController.edit(id)
+DELETE /sections/:id               controllers.SectionController.delete(id)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
