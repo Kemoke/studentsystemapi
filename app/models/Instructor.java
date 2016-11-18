@@ -9,7 +9,7 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-public class Instructor extends BaseModel{
+public class Instructor extends User{
     @Indexed(unique = true)
     private String instructorID;
     private String firstName;
@@ -37,20 +37,6 @@ public class Instructor extends BaseModel{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public static List<Instructor> getAll(){
-        return DBConnection.getDatastore()
-                .createQuery(Instructor.class)
-                .asList();
-    }
-
-    public static List<Instructor> getAllWithField(String field, String value){
-        return DBConnection.getDatastore()
-                .createQuery(Instructor.class)
-                .field(field)
-                .equal(value)
-                .asList();
     }
 
     public static Instructor findByID(String id){

@@ -17,10 +17,6 @@ public class User extends BaseModel {
     @Indexed(unique = true)
     private String email;
     private int userType;
-    @Reference
-    private Student student;
-    @Reference
-    private Instructor instructor;
 
     public String getUsername() {
         return username;
@@ -53,22 +49,6 @@ public class User extends BaseModel {
 
     public void setUserType(int userType) {
         this.userType = userType;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Instructor getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
     }
 
     public static List<User> getAll(){

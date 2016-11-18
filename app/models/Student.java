@@ -10,7 +10,7 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-public class Student {
+public class Student extends User{
     @Indexed(unique = true)
     private String studentID;
     private String firstName;
@@ -75,20 +75,6 @@ public class Student {
 
     public void setCgpa(double cgpa) {
         this.cgpa = cgpa;
-    }
-
-    public static List<Student> getAll(){
-        return DBConnection.getDatastore()
-                .createQuery(Student.class)
-                .asList();
-    }
-
-    public static List<Student> getAllWithField(String field, String value){
-        return DBConnection.getDatastore()
-                .createQuery(Student.class)
-                .field(field)
-                .equal(value)
-                .asList();
     }
 
     public static Student findByID(String id){
