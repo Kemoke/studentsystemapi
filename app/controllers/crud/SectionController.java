@@ -49,11 +49,14 @@ public class SectionController extends Controller {
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Section section = Section.findByID(id);
         Course sectionCourse = Course.findByID(params.get("courseId")[0]);
+        Instructor instructor = Instructor.findByID(params.get("instructorId")[0]);
         sectionCourse.getSections().remove(section);
         section.setCapacity(Integer.valueOf(params.get("capacity")[0]));
         section.setCourse(sectionCourse);
+        section.setInstructor(instructor);
         section.save();
         sectionCourse.getSections().add(section);
+        instructor.getSections().add(section);
         return ok(Json.toJson(section));
     }
 

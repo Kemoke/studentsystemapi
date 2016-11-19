@@ -56,9 +56,9 @@ DELETE  /courses/:id  params: none  return: "deleted"
 ## Section routes
 ```
 GET     /sections  params: none  return: Section list
-POST    /sections  params: courseId,capacity  return: added Section
+POST    /sections  params: courseId,capacity,instructorId  return: added Section
 GET     /sections/:id  params: none  return: Section by id
-PUT     /sections/:id  params: courseId,capacity  return: edited Section
+PUT     /sections/:id  params: courseId,capacity,instructorId  return: edited Section
 DELETE  /sections/:id  params: none  return: "deleted"
 ```
 #Not implemented
