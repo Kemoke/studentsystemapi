@@ -16,6 +16,16 @@ public class Section extends BaseModel {
     private int capacity;
     @Reference
     private List<Student> students;
+    @Reference
+    private Instructor instructor;
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
     public int getNumber() {
         return number;
