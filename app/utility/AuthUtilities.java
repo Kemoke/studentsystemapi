@@ -2,6 +2,7 @@ package utility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import play.mvc.Http;
 import services.AppConfig;
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class AuthUtilities {
 
-    public static Claims getToken(Http.Context context) throws SignatureException ,IllegalArgumentException{
+    public static Claims getToken(Http.Context context) throws SignatureException ,IllegalArgumentException, MalformedJwtException{
         String[] authToken = context.request().headers().get("X-Auth-Token");
         if(authToken != null){
             Claims jwt = Jwts.parser().setSigningKey(AppConfig.JWTKey)
