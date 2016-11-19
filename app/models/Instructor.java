@@ -12,8 +12,6 @@ import java.util.List;
 public class Instructor extends User{
     @Indexed(unique = true)
     private String instructorID;
-    private String firstName;
-    private String lastName;
 
     public String getInstructorID() {
         return instructorID;
@@ -23,20 +21,18 @@ public class Instructor extends User{
         this.instructorID = instructorID;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public static List<Instructor> getAll(){
+        return DBConnection.getDatastore()
+                .createQuery(Instructor.class)
+                .asList();
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public static List<Instructor> getAllWithField(String field, String value){
+        return DBConnection.getDatastore()
+                .createQuery(Instructor.class)
+                .field(field)
+                .equal(value)
+                .asList();
     }
 
     public static Instructor findByID(String id){

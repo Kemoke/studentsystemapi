@@ -13,8 +13,6 @@ import java.util.List;
 public class Student extends User{
     @Indexed(unique = true)
     private String studentID;
-    private String firstName;
-    private String lastName;
     private int semester;
     private int year;
     private double cgpa;
@@ -35,22 +33,6 @@ public class Student extends User{
 
     public void setStudentID(String studentID) {
         this.studentID = studentID;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public int getSemester() {
@@ -75,6 +57,20 @@ public class Student extends User{
 
     public void setCgpa(double cgpa) {
         this.cgpa = cgpa;
+    }
+
+    public static List<Student> getAll(){
+        return DBConnection.getDatastore()
+                .createQuery(Student.class)
+                .asList();
+    }
+
+    public static List<Student> getAllWithField(String field, String value){
+        return DBConnection.getDatastore()
+                .createQuery(Student.class)
+                .field(field)
+                .equal(value)
+                .asList();
     }
 
     public static Student findByID(String id){

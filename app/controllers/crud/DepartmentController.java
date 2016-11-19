@@ -1,4 +1,4 @@
-package controllers;
+package controllers.crud;
 
 import filters.AdminAuth;
 import models.Department;

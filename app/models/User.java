@@ -1,22 +1,16 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Indexed;
-import org.mongodb.morphia.annotations.Reference;
-import services.DBConnection;
 
-import java.util.List;
-
-@Entity
 public class User extends BaseModel {
     @Indexed(unique = true)
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     @Indexed(unique = true)
     private String email;
-    private int userType;
 
     public String getUsername() {
         return username;
@@ -43,43 +37,19 @@ public class User extends BaseModel {
         this.email = email;
     }
 
-    public int getUserType() {
-        return userType;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public static List<User> getAll(){
-        return DBConnection.getDatastore()
-                .createQuery(User.class)
-                .asList();
+    public String getLastName() {
+        return lastName;
     }
 
-    public static List<User> getAllWithField(String field, String value){
-        return DBConnection.getDatastore()
-                .createQuery(User.class)
-                .field(field)
-                .equal(value)
-                .asList();
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
-
-    public static User findByID(String id){
-        return DBConnection.getDatastore()
-                .get(User.class, new ObjectId(id));
-    }
-
-    public static User findByID(ObjectId id){
-        return DBConnection.getDatastore()
-                .get(User.class, id);
-    }
-
-    public static User findByField(String field, String value){
-        return DBConnection.getDatastore()
-                .createQuery(User.class)
-                .field(field).equal(value)
-                .get();
-    }
-
 }
