@@ -25,7 +25,7 @@ public class AuthUtilities {
                     return null;
                 }
                 return jwt;
-            }catch (SignatureException | IllegalArgumentException | NullPointerException e){
+            }catch (Exception e){
                 return null;
             }
         }
