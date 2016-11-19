@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -17,6 +18,7 @@ public class Course extends BaseModel {
     @Reference
     private List<Section> sections;
 
+    @JsonIgnore
     public List<Section> getSections() {
         return sections;
     }

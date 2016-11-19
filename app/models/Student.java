@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -19,6 +20,7 @@ public class Student extends User{
     @Reference
     private List<Section> sections;
 
+    @JsonIgnore
     public List<Section> getSections() {
         return sections;
     }

@@ -23,7 +23,6 @@ public class AuthController extends Controller {
     @BodyParser.Of(BodyParser.FormUrlEncoded.class)
     public Result login(){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
-
         String email = params.get("email")[0];
         String password = params.get("password")[0];
         User user = Student.findByField("email", email);

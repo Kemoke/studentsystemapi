@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -21,6 +22,7 @@ public class Department extends BaseModel {
         this.name = name;
     }
 
+    @JsonIgnore
     public List<Program> getPrograms() {
         return programs;
     }
