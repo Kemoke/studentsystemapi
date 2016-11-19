@@ -15,15 +15,19 @@ import java.util.Date;
  */
 public class AuthUtilities {
 
-    public static Claims getToken(Http.Context context) throws SignatureException ,IllegalArgumentException, MalformedJwtException{
+    public static Claims getToken(Http.Context context){
         String[] authToken = context.request().headers().get("X-Auth-Token");
         if(authToken != null){
-            Claims jwt = Jwts.parser().setSigningKey(AppConfig.JWTKey)
-                    .parseClaimsJws(authToken[0]).getBody();
-            if(jwt.getExpiration().getTime() < Date.from(Instant.now()).getTime()){
+            try{
+                Claims jwt = Jwts.parser().setSigningKey(AppConfig.JWTKey)
+                        .parseClaimsJws(authToken[0]).getBody();
+                if(jwt.getExpiration().getTime() < Date.from(Instant.now()).getTime()){
+                    return null;
+                }
+                return jwt;
+            }catch (SignatureException | IllegalArgumentException | NullPointerException e){
                 return null;
             }
-            return jwt;
         }
         return null;
     }
