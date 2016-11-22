@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -9,6 +10,7 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"course", "courses"})
 public class Course extends BaseModel {
     private String name;
     private String code;
@@ -18,7 +20,6 @@ public class Course extends BaseModel {
     @Reference
     private List<Section> sections;
 
-    @JsonIgnore
     public List<Section> getSections() {
         return sections;
     }

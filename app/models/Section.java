@@ -1,6 +1,8 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -9,15 +11,53 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"section", "sections"})
 public class Section extends BaseModel {
     private int number;
     @Reference
     private Course course;
-    private int capacity;
     @Reference
     private List<Student> students;
     @Reference
     private Instructor instructor;
+    private int capacity;
+    private int day;
+    private int startTime;
+    private int endTime;
+    @Reference
+    private List<GradeType> gradeTypes;
+
+    public List<GradeType> getGradeTypes() {
+        return gradeTypes;
+    }
+
+    public void setGradeTypes(List<GradeType> gradeTypes) {
+        this.gradeTypes = gradeTypes;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
 
     public Instructor getInstructor() {
         return instructor;
@@ -51,7 +91,6 @@ public class Section extends BaseModel {
         this.course = course;
     }
 
-    @JsonIgnore
     public List<Student> getStudents() {
         return students;
     }

@@ -3,7 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.mongodb.morphia.annotations.Indexed;
 
-public class User extends BaseModel {
+public abstract class User extends BaseModel {
     @Indexed(unique = true)
     private String username;
     private String password;

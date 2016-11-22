@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 import services.DBConnection;
 
-public class BaseModel {
+public abstract class BaseModel {
     @Id
     private ObjectId id;
 

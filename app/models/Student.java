@@ -1,6 +1,6 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
@@ -11,6 +11,7 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"student", "students"})
 public class Student extends User{
     @Indexed(unique = true)
     private String studentID;
@@ -19,8 +20,9 @@ public class Student extends User{
     private double cgpa;
     @Reference
     private List<Section> sections;
+    @Embedded
+    private List<Grade> grades;
 
-    @JsonIgnore
     public List<Section> getSections() {
         return sections;
     }
