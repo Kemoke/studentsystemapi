@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.mongodb.morphia.annotations.Indexed;
 
 public abstract class User extends BaseModel {
-    @Indexed(unique = true)
+    @Indexed()
     private String username;
     private String password;
     private String firstName;
     private String lastName;
-    @Indexed(unique = true)
+    @Indexed()
     private String email;
 
     public String getUsername() {

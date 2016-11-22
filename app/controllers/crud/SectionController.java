@@ -32,8 +32,6 @@ public class SectionController extends Controller {
         section.setCourse(sectionCourse);
         section.setInstructor(instructor);
         section.save();
-        sectionCourse.getSections().add(section);
-        instructor.getSections().add(section);
         return ok(Json.toJson(section));
     }
 
@@ -48,15 +46,12 @@ public class SectionController extends Controller {
     public Result edit(String id){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Section section = Section.findByID(id);
-        Course sectionCourse = Course.findByID(params.get("courseId")[0]);
-        Instructor instructor = Instructor.findByID(params.get("instructorId")[0]);
-        sectionCourse.getSections().remove(section);
+        Course newCourse = Course.findByID(params.get("courseId")[0]);
+        Instructor newInstructor = Instructor.findByID(params.get("instructorId")[0]);
         section.setCapacity(Integer.valueOf(params.get("capacity")[0]));
-        section.setCourse(sectionCourse);
-        section.setInstructor(instructor);
+        section.setCourse(newCourse);
+        section.setInstructor(newInstructor);
         section.save();
-        sectionCourse.getSections().add(section);
-        instructor.getSections().add(section);
         return ok(Json.toJson(section));
     }
 

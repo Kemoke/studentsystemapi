@@ -6,13 +6,14 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import services.DBConnection;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"department", "departments"})
 public class Department extends BaseModel {
     private String name;
     @Reference
+    @JsonIgnoreProperties({"department", "departments"})
     private List<Program> programs;
 
     public String getName() {
@@ -60,5 +61,14 @@ public class Department extends BaseModel {
                 .createQuery(Department.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void remove() {
+        for (Iterator<Program> iterator = programs.iterator(); iterator.hasNext();) {
+            iterator.next().removeIter();
+            iterator.remove();
+        }
+        super.remove();
     }
 }

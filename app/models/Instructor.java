@@ -10,11 +10,11 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"instructor", "instructors"})
 public class Instructor extends User{
-    @Indexed(unique = true)
+    @Indexed()
     private String instructorID;
     @Reference
+    @JsonIgnoreProperties({"instructor", "instructors"})
     private List<Section> sections;
 
     public List<Section> getSections() {
@@ -62,5 +62,14 @@ public class Instructor extends User{
                 .createQuery(Instructor.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void remove() {
+        for (Section section : sections) {
+            section.setInstructor(null);
+            section.save();
+        }
+        super.remove();
     }
 }

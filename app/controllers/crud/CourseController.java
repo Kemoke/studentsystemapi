@@ -31,7 +31,6 @@ public class CourseController extends Controller {
         course.setEcts(Integer.valueOf(params.get("ects")[0]));
         course.setProgram(courseProgram);
         course.save();
-        courseProgram.getCourses().add(course);
         return ok(Json.toJson(course));
     }
 
@@ -46,14 +45,12 @@ public class CourseController extends Controller {
     public Result edit(String id){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Course course = Course.findByID(id);
-        Program courseProgram = Program.findByID(params.get("programId")[0]);
-        courseProgram.getCourses().remove(course);
+        Program newProgram = Program.findByID(params.get("programId")[0]);
         course.setName(params.get("name")[0]);
         course.setCode(params.get("code")[0]);
         course.setEcts(Integer.valueOf(params.get("ects")[0]));
-        course.setProgram(courseProgram);
+        course.setProgram(newProgram);
         course.save();
-        courseProgram.getCourses().add(course);
         return ok(Json.toJson(course));
     }
 

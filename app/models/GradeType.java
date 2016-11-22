@@ -2,7 +2,6 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import services.DBConnection;
@@ -10,18 +9,24 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"gradeType", "gradeTypes"})
 public class GradeType extends BaseModel{
     @Reference
+    @JsonIgnoreProperties({"gradeType", "gradeTypes"})
     private Section section;
     private String name;
     private int weight;
+    private Section oldSection;
 
     public Section getSection() {
         return section;
     }
 
     public void setSection(Section section) {
+        if(!this.section.getId().equals(section.getId())){
+            oldSection = this.section;
+        } else {
+            oldSection = null;
+        }
         this.section = section;
     }
 
@@ -70,5 +75,24 @@ public class GradeType extends BaseModel{
                 .createQuery(GradeType.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void save() {
+        if(oldSection != null){
+            oldSection.getGradeTypes().remove(this);
+            oldSection.save();
+            section.getGradeTypes().add(this);
+            section.save();
+            oldSection = null;
+        }
+        super.save();
+    }
+
+    @Override
+    public void remove() {
+        section.getGradeTypes().remove(this);
+        section.save();
+        super.remove();
     }
 }

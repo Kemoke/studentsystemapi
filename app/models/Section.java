@@ -1,8 +1,6 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -11,20 +9,25 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"section", "sections"})
 public class Section extends BaseModel {
     private int number;
     @Reference
+    @JsonIgnoreProperties({"section", "sections"})
     private Course course;
+    private Course oldCourse;
     @Reference
+    @JsonIgnoreProperties({"section", "sections"})
     private List<Student> students;
     @Reference
+    @JsonIgnoreProperties({"section", "sections"})
     private Instructor instructor;
+    private Instructor oldInstructor;
     private int capacity;
     private int day;
     private int startTime;
     private int endTime;
     @Reference
+    @JsonIgnoreProperties({"section", "sections"})
     private List<GradeType> gradeTypes;
 
     public List<GradeType> getGradeTypes() {
@@ -64,7 +67,16 @@ public class Section extends BaseModel {
     }
 
     public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
+        if(this.instructor == null) {
+            this.instructor = instructor;
+            instructor.getSections().add(this);
+        };
+        if(instructor == null || !this.instructor.getId().equals(instructor.getId())){
+            oldInstructor = this.instructor;
+            this.instructor = instructor;
+        } else {
+            oldInstructor = null;
+        }
     }
 
     public int getNumber() {
@@ -88,7 +100,16 @@ public class Section extends BaseModel {
     }
 
     public void setCourse(Course course) {
-        this.course = course;
+        if(this.course == null){
+            this.course = course;
+            course.getSections().add(this);
+        };
+        if(!this.course.getId().equals(course.getId())){
+            oldCourse = this.course;
+            this.course = course;
+        } else {
+            oldCourse = null;
+        }
     }
 
     public List<Student> getStudents() {
@@ -128,5 +149,58 @@ public class Section extends BaseModel {
                 .createQuery(Section.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void save() {
+        if(oldCourse != null){
+            oldCourse.getSections().remove(this);
+            oldCourse.save();
+            course.getSections().add(this);
+        }
+        if(oldInstructor != null){
+            oldInstructor.getSections().remove(this);
+            oldInstructor.save();
+            if(instructor != null){
+                instructor.getSections().add(this);
+            }
+        }
+        oldInstructor = null;
+        oldCourse = null;
+        super.save();
+        course.save();
+        if(instructor != null){
+            instructor.save();
+        }
+    }
+
+    @Override
+    public void remove() {
+        if(course != null){
+            course.getSections().remove(this);
+            course.save();
+        }
+        if(instructor != null){
+            instructor.getSections().remove(this);
+            instructor.save();
+        }
+        for (Student student : students) {
+            student.getSections().remove(this);
+            student.save();
+        }
+        super.remove();
+    }
+
+    @Override
+    public void removeIter() {
+        if(instructor != null){
+            instructor.getSections().remove(this);
+            instructor.save();
+        }
+        for (Student student : students) {
+            student.getSections().remove(this);
+            student.save();
+        }
+        super.removeIter();
     }
 }

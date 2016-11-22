@@ -1,24 +1,26 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import services.DBConnection;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"course", "courses"})
 public class Course extends BaseModel {
     private String name;
     private String code;
     private int ects;
     @Reference
+    @JsonIgnoreProperties({"course", "courses"})
     private Program program;
     @Reference
+    @JsonIgnoreProperties({"course", "courses"})
     private List<Section> sections;
+    private Program oldprogram;
 
     public List<Section> getSections() {
         return sections;
@@ -57,7 +59,16 @@ public class Course extends BaseModel {
     }
 
     public void setProgram(Program program) {
-        this.program = program;
+        if(this.program == null){
+            this.program = program;
+            program.getCourses().add(this);
+        };
+        if(!this.program.getId().equals(program.getId())){
+            oldprogram = this.program;
+            this.program = program;
+        } else {
+            oldprogram = null;
+        }
     }
 
     public static List<Course> getAll(){
@@ -89,5 +100,36 @@ public class Course extends BaseModel {
                 .createQuery(Course.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void save() {
+        if(oldprogram != null){
+            oldprogram.getCourses().remove(this);
+            oldprogram.save();
+            program.getCourses().add(this);
+            oldprogram = null;
+        }
+        super.save();
+        program.save();
+    }
+
+    @Override
+    public void remove() {
+        program.getCourses().remove(this);
+        program.save();
+        for (Section section : sections) {
+            section.removeIter();
+        }
+        super.remove();
+    }
+
+    @Override
+    public void removeIter() {
+        for (Iterator<Section> iterator = sections.iterator(); iterator.hasNext();) {
+            iterator.next().removeIter();
+            iterator.remove();
+        }
+        super.removeIter();
     }
 }

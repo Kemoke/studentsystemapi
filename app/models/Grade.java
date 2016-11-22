@@ -1,9 +1,11 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Reference;
 
 public class Grade {
     @Reference
+    @JsonIgnoreProperties({"grade", "grades"})
     private GradeType gradeType;
     private int score;
 

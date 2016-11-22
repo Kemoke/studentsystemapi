@@ -26,4 +26,7 @@ public abstract class BaseModel {
         DBConnection.getDatastore().delete(this);
     }
 
+    public void removeIter() {
+        DBConnection.getDatastore().delete(this);
+    }
 }

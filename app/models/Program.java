@@ -6,16 +6,19 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import services.DBConnection;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"program", "programs"})
 public class Program extends BaseModel{
     private String name;
     @Reference
+    @JsonIgnoreProperties({"program", "programs"})
     private Department department;
     @Reference
+    @JsonIgnoreProperties({"program", "programs"})
     private List<Course> courses;
+    private Department oldDepartment;
 
     public String getName() {
         return name;
@@ -30,7 +33,16 @@ public class Program extends BaseModel{
     }
 
     public void setDepartment(Department department) {
-        this.department = department;
+        if(this.department == null){
+            this.department = department;
+            department.getPrograms().add(this);
+        }
+        if(!this.department.getId().equals(department.getId())){
+            oldDepartment = this.department;
+            this.department = department;
+        } else {
+            oldDepartment = null;
+        }
     }
 
     public List<Course> getCourses() {
@@ -70,5 +82,36 @@ public class Program extends BaseModel{
                 .createQuery(Program.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void save() {
+        if(oldDepartment != null){
+            oldDepartment.getPrograms().remove(this);
+            oldDepartment.save();
+            department.getPrograms().add(this);
+            oldDepartment = null;
+        }
+        super.save();
+        department.save();
+    }
+
+    @Override
+    public void remove() {
+        department.getPrograms().remove(this);
+        department.save();
+        for (Course course : courses) {
+            course.remove();
+        }
+        super.remove();
+    }
+
+    @Override
+    public void removeIter(){
+        for (Iterator<Course> iterator = courses.iterator(); iterator.hasNext();) {
+            iterator.next().removeIter();
+            iterator.remove();
+        }
+        super.removeIter();
     }
 }

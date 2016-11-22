@@ -29,7 +29,6 @@ public class ProgramController extends Controller {
         program.setName(params.get("name")[0]);
         program.setDepartment(progDepartment);
         program.save();
-        progDepartment.getPrograms().add(program);
         return ok(Json.toJson(program));
     }
 
@@ -44,18 +43,18 @@ public class ProgramController extends Controller {
     public Result edit(String id){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Program program = Program.findByID(id);
-        Department progDepartment = Department.findByID(params.get("departmentId")[0]);
-        progDepartment.getPrograms().remove(program);
+        Department newDepartment = Department.findByID(params.get("departmentId")[0]);
         program.setName(params.get("name")[0]);
-        program.setDepartment(progDepartment);
+        program.setDepartment(newDepartment);
         program.save();
-        progDepartment.getPrograms().add(program);
         return ok(Json.toJson(program));
     }
 
     @Security.Authenticated(AdminAuth.class)
     public Result delete(String id){
         Program program = Program.findByID(id);
+        program.getDepartment().getPrograms().remove(program);
+        program.getDepartment().save();
         program.remove();
         return ok("deleted");
     }

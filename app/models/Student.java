@@ -11,17 +11,26 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"student", "students"})
 public class Student extends User{
-    @Indexed(unique = true)
+    @Indexed()
     private String studentID;
     private int semester;
     private int year;
     private double cgpa;
     @Reference
+    @JsonIgnoreProperties({"student", "students"})
     private List<Section> sections;
     @Embedded
+    @JsonIgnoreProperties({"student", "students"})
     private List<Grade> grades;
+
+    public List<Grade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
 
     public List<Section> getSections() {
         return sections;
@@ -92,5 +101,14 @@ public class Student extends User{
                 .createQuery(Student.class)
                 .field(field).equal(value)
                 .get();
+    }
+
+    @Override
+    public void remove() {
+        for (Section section : sections) {
+            section.getStudents().remove(this);
+            section.save();
+        }
+        super.remove();
     }
 }
