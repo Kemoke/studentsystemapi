@@ -15,6 +15,12 @@ public class Department extends BaseModel {
     @Reference
     @JsonIgnoreProperties({"department", "departments"})
     private List<Program> programs;
+    @Reference
+    @JsonIgnoreProperties({"department", "departments"})
+    private List<Instructor> instructors;
+    @Reference
+    @JsonIgnoreProperties({"department", "departments"})
+    private List<Student> students;
 
     public String getName() {
         return name;
@@ -30,6 +36,22 @@ public class Department extends BaseModel {
 
     public void setPrograms(List<Program> programs) {
         this.programs = programs;
+    }
+
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(List<Instructor> instructors) {
+        this.instructors = instructors;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     public static List<Department> getAll(){
@@ -68,6 +90,14 @@ public class Department extends BaseModel {
         for (Iterator<Program> iterator = programs.iterator(); iterator.hasNext();) {
             iterator.next().removeIter();
             iterator.remove();
+        }
+        for(Student student : students){
+            student.setDepartment(null);
+            student.save();
+        }
+        for (Instructor instructor : instructors) {
+            instructor.setDepartment(null);
+            instructor.save();
         }
         super.remove();
     }

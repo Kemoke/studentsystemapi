@@ -18,7 +18,16 @@ public class Program extends BaseModel{
     @Reference
     @JsonIgnoreProperties({"program", "programs"})
     private List<Course> courses;
+    private String curriculumUri;
     private Department oldDepartment;
+
+    public String getCurriculumUri() {
+        return curriculumUri;
+    }
+
+    public void setCurriculumUri(String curriculumUri) {
+        this.curriculumUri = curriculumUri;
+    }
 
     public String getName() {
         return name;

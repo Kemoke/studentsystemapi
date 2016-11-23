@@ -2,6 +2,8 @@ package controllers.crud;
 
 import filters.AdminAuth;
 import filters.StudentAuth;
+import models.Department;
+import models.Log;
 import models.Student;
 import org.mindrot.jbcrypt.BCrypt;
 import play.libs.Json;
@@ -26,6 +28,7 @@ public class StudentController extends Controller {
     public Result add(){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Student newStudent = new Student();
+        Department department = Department.findByID(params.get("departmentId")[0]);
         String rawPass = params.get("password")[0];
         String hashPass = BCrypt.hashpw(rawPass, BCrypt.gensalt());
         newStudent.setPassword(hashPass);
@@ -37,7 +40,9 @@ public class StudentController extends Controller {
         newStudent.setSemester(Integer.valueOf(params.get("semester")[0]));
         newStudent.setYear(Integer.valueOf(params.get("year")[0]));
         newStudent.setCgpa(Double.valueOf(params.get("cgpa")[0]));
+        newStudent.setDepartment(department);
         newStudent.save();
+        Log.LogAction(request().username(), "Add student id:"+newStudent.getId());
         return ok(Json.toJson(newStudent));
     }
 
@@ -59,6 +64,7 @@ public class StudentController extends Controller {
     public Result edit(String id){
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Student student = Student.findByID(id);
+        Department department = Department.findByID(params.get("departmentId")[0]);
         student.setUsername(params.get("username")[0]);
         student.setEmail(params.get("email")[0]);
         student.setStudentID(params.get("studentId")[0]);
@@ -67,13 +73,16 @@ public class StudentController extends Controller {
         student.setSemester(Integer.valueOf(params.get("semester")[0]));
         student.setYear(Integer.valueOf(params.get("year")[0]));
         student.setCgpa(Double.valueOf(params.get("cgpa")[0]));
+        student.setDepartment(department);
         student.save();
+        Log.LogAction(request().username(), "Edit student id:"+student.getId());
         return ok(Json.toJson(student));
     }
 
     @Security.Authenticated(AdminAuth.class)
     public Result delete(String id){
         Student student = Student.findByID(id);
+        Log.LogAction(request().username(), "Remove student id:"+student.getId());
         student.remove();
         return ok("deleted");
     }

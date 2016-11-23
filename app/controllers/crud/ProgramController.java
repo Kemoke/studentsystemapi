@@ -2,6 +2,7 @@ package controllers.crud;
 
 import filters.AdminAuth;
 import models.Department;
+import models.Log;
 import models.Program;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -29,6 +30,7 @@ public class ProgramController extends Controller {
         program.setName(params.get("name")[0]);
         program.setDepartment(progDepartment);
         program.save();
+        Log.LogAction(request().username(), "Add program id:"+program.getId());
         return ok(Json.toJson(program));
     }
 
@@ -47,6 +49,7 @@ public class ProgramController extends Controller {
         program.setName(params.get("name")[0]);
         program.setDepartment(newDepartment);
         program.save();
+        Log.LogAction(request().username(), "Edit program id:"+program.getId());
         return ok(Json.toJson(program));
     }
 
@@ -55,6 +58,7 @@ public class ProgramController extends Controller {
         Program program = Program.findByID(id);
         program.getDepartment().getPrograms().remove(program);
         program.getDepartment().save();
+        Log.LogAction(request().username(), "Remove program id:"+program.getId());
         program.remove();
         return ok("deleted");
     }

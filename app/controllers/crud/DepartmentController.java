@@ -2,6 +2,7 @@ package controllers.crud;
 
 import filters.AdminAuth;
 import models.Department;
+import models.Log;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -26,6 +27,7 @@ public class DepartmentController extends Controller {
         Department department = new Department();
         department.setName(params.get("name")[0]);
         department.save();
+        Log.LogAction(request().username(), "Add department id:"+department.getId());
         return ok(Json.toJson(department));
     }
 
@@ -42,12 +44,14 @@ public class DepartmentController extends Controller {
         Department department = Department.findByID(id);
         department.setName(params.get("name")[0]);
         department.save();
+        Log.LogAction(request().username(), "Edit department id:"+department.getId());
         return ok(Json.toJson(department));
     }
 
     @Security.Authenticated(AdminAuth.class)
     public Result delete(String id){
         Department department = Department.findByID(id);
+        Log.LogAction(request().username(), "Remove department id:"+department.getId());
         department.remove();
         return ok("deleted");
     }

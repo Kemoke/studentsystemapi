@@ -16,6 +16,10 @@ public class Instructor extends User{
     @Reference
     @JsonIgnoreProperties({"instructor", "instructors"})
     private List<Section> sections;
+    @Reference
+    @JsonIgnoreProperties({"instructor", "instructors"})
+    private Department department;
+    private Department oldDepartment;
 
     public List<Section> getSections() {
         return sections;
@@ -31,6 +35,26 @@ public class Instructor extends User{
 
     public void setInstructorID(String instructorID) {
         this.instructorID = instructorID;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        if(department == null){
+            this.department.getInstructors().remove(this);
+            oldDepartment = this.department;
+            this.department = null;
+        }else if(this.department == null){
+            this.department = department;
+            department.getInstructors().add(this);
+        }else if(!this.department.getId().equals(department.getId())){
+            oldDepartment = this.department;
+            this.department = department;
+        } else {
+            oldDepartment = null;
+        }
     }
 
     public static List<Instructor> getAll(){
@@ -65,7 +89,25 @@ public class Instructor extends User{
     }
 
     @Override
+    public void save() {
+        if(oldDepartment != null){
+            oldDepartment.getInstructors().remove(this);
+            oldDepartment.save();
+            if(department != null){
+                department.getInstructors().add(this);
+            }
+            oldDepartment = null;
+        }
+        super.save();
+        if(this.department != null){
+            this.department.save();
+        }
+    }
+
+    @Override
     public void remove() {
+        department.getInstructors().remove(this);
+        department.save();
         for (Section section : sections) {
             section.setInstructor(null);
             section.save();

@@ -29,6 +29,7 @@ public class Section extends BaseModel {
     @Reference
     @JsonIgnoreProperties({"section", "sections"})
     private List<GradeType> gradeTypes;
+    private String syllabusUri;
 
     public List<GradeType> getGradeTypes() {
         return gradeTypes;
@@ -103,7 +104,7 @@ public class Section extends BaseModel {
         if(this.course == null){
             this.course = course;
             course.getSections().add(this);
-        };
+        }
         if(!this.course.getId().equals(course.getId())){
             oldCourse = this.course;
             this.course = course;
@@ -202,5 +203,13 @@ public class Section extends BaseModel {
             student.save();
         }
         super.removeIter();
+    }
+
+    public String getSyllabusUri() {
+        return syllabusUri;
+    }
+
+    public void setSyllabusUri(String syllabusUri) {
+        this.syllabusUri = syllabusUri;
     }
 }

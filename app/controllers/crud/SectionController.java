@@ -3,6 +3,7 @@ package controllers.crud;
 import filters.AdminAuth;
 import models.Course;
 import models.Instructor;
+import models.Log;
 import models.Section;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -32,6 +33,7 @@ public class SectionController extends Controller {
         section.setCourse(sectionCourse);
         section.setInstructor(instructor);
         section.save();
+        Log.LogAction(request().username(), "Add section id:"+section.getId());
         return ok(Json.toJson(section));
     }
 
@@ -52,12 +54,14 @@ public class SectionController extends Controller {
         section.setCourse(newCourse);
         section.setInstructor(newInstructor);
         section.save();
+        Log.LogAction(request().username(), "Edit section id:"+section.getId());
         return ok(Json.toJson(section));
     }
 
     @Security.Authenticated(AdminAuth.class)
     public Result delete(String id){
         Section section = Section.findByID(id);
+        Log.LogAction(request().username(), "Remove section id:"+section.getId());
         section.remove();
         return ok("deleted");
     }

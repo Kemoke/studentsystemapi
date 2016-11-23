@@ -23,6 +23,10 @@ public class Student extends User{
     @Embedded
     @JsonIgnoreProperties({"student", "students"})
     private List<Grade> grades;
+    @Reference
+    @JsonIgnoreProperties({"student", "students"})
+    private Department department;
+    private Department oldDepartment;
 
     public List<Grade> getGrades() {
         return grades;
@@ -103,12 +107,52 @@ public class Student extends User{
                 .get();
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        if(department == null){
+            this.department.getStudents().remove(this);
+            oldDepartment = this.department;
+            this.department = null;
+        }else if(this.department == null){
+            this.department = department;
+            department.getStudents().add(this);
+        }else if(!this.department.getId().equals(department.getId())){
+            oldDepartment = this.department;
+            this.department = department;
+        } else {
+            oldDepartment = null;
+        }
+    }
+
+    @Override
+    public void save() {
+        if(oldDepartment != null){
+            oldDepartment.getStudents().remove(this);
+            oldDepartment.save();
+            if(department != null){
+                department.getStudents().add(this);
+            }
+            oldDepartment = null;
+        }
+        super.save();
+        if(this.department != null){
+            this.department.save();
+        }
+    }
+
     @Override
     public void remove() {
+        department.getStudents().remove(this);
+        department.save();
         for (Section section : sections) {
             section.getStudents().remove(this);
             section.save();
         }
         super.remove();
     }
+
+
 }
