@@ -48,8 +48,6 @@ PUT /sections/:id               controllers.crud.SectionController.edit(id)
 DELETE /sections/:id            controllers.crud.SectionController.delete(id)
 
 # Student action routes #
-GET /student/courses            controllers.StudentActionController.getAvailableCourses()
-GET /student/sections           controllers.StudentActionController.getAvailableSections()
 POST /student/register          controllers.StudentActionController.register()
 POST /student/unregister        controllers.StudentActionController.unregister()
 
