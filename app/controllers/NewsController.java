@@ -19,12 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
-/**
- * Created by Kemoke on 12/1/2016.
- */
 public class NewsController extends Controller {
+    private final WSClient wsClient;
+
     @Inject
-    WSClient wsClient;
+    public NewsController(WSClient wsClient) {
+        this.wsClient = wsClient;
+    }
 
     @BodyParser.Of(BodyParser.Text.class)
     public CompletionStage<Result> getArticle() {

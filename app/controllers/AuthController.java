@@ -12,7 +12,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.AppConfig;
-import utility.TokenJson;
+import util.TokenJson;
 
 import java.util.Calendar;
 import java.util.Date;

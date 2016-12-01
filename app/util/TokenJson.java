@@ -1,8 +1,5 @@
-package utility;
+package util;
 
-/**
- * Created by kemoke on 11/19/16.
- */
 public class TokenJson {
     public String jwt;
     public String type;

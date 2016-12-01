@@ -2,12 +2,11 @@ package filters;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureException;
-import models.Admin;
 import models.Student;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
-import utility.AuthUtilities;
+import util.AuthUtilities;
 
 public class StudentAuth extends Security.Authenticator{
 
