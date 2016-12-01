@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   "org.mongodb.morphia" % "morphia" % "1.2.1",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "io.jsonwebtoken" % "jjwt" % "0.7.0",
+  "org.jsoup" % "jsoup" % "1.10.1",
   javaJdbc,
   cache,
   javaWs
