@@ -1,27 +1,16 @@
 import javax.inject.*;
 import play.*;
+import play.filters.cors.CORSFilter;
+import play.filters.gzip.GzipFilter;
+import play.http.DefaultHttpFilters;
 import play.mvc.EssentialFilter;
 import play.http.HttpFilters;
 
-@Singleton
-public class Filters implements HttpFilters {
 
-    private final Environment env;
+public class Filters extends DefaultHttpFilters {
 
-    /**
-     * @param env Basic environment settings for the current application.
-     */
     @Inject
-    public Filters(Environment env){
-        this.env = env;
+    public Filters(GzipFilter gzipFilter, CORSFilter corsFilter){
+        super(gzipFilter, corsFilter);
     }
-
-    @Override
-    public EssentialFilter[] filters() {
-      // Use the example filter if we're running development mode. If
-      // we're running in production or test mode then don't use any
-      // filters at all.
-        return new EssentialFilter[]{};
-    }
-
 }
