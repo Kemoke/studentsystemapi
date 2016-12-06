@@ -25,7 +25,11 @@ public class LoginCache {
     }
 
     public void put(User user) {
-        userCacheMap.put(user.getEmail(), new UserCache(user.getPassword(), user.getClass().getSimpleName()));
+        try {
+            userCacheMap.put(user.getEmail(), new UserCache(user.getPassword(), user.getClass().getSimpleName()));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUserType(String email) {
