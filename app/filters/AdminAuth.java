@@ -16,7 +16,7 @@ public class AdminAuth extends Security.Authenticator{
         try{
             Claims jwt = AuthUtilities.getToken(ctx);
             String email = jwt.getSubject();
-            String type = DBConnection.getLoginCache().getUserType(email);
+            String type = DBConnection.getLoginCache().getUser(email).getType();
             if(!type.equals("Admin")){
                 return null;
             }
