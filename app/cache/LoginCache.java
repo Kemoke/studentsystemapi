@@ -28,7 +28,7 @@ public class LoginCache {
         try {
             userCacheMap.put(user.getEmail(), new UserCache(user.getPassword(), user.getClass().getSimpleName()));
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            System.out.println(user.toString());
         }
     }
 
