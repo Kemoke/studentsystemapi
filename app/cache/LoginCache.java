@@ -9,12 +9,8 @@ import java.util.Map;
 public class LoginCache {
     private Map<String, UserCache> userCacheMap;
 
-    public LoginCache() {
-        userCacheMap = new HashMap<>();
-    }
-
     public LoginCache(List<User> users) {
-        super();
+        userCacheMap = new HashMap<>();
         fill(users);
     }
 
