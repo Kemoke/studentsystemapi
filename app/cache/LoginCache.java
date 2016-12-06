@@ -25,6 +25,9 @@ public class LoginCache {
     }
 
     public void put(User user){
+        if(user == null){
+            return;
+        }
         userCacheMap.put(user.getEmail(), new UserCache(user.getPassword(), user.getClass().getSimpleName()));
     }
 
