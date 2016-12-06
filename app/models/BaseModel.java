@@ -1,9 +1,13 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.deser.Deserializers;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 import services.DBConnection;
+import sun.reflect.Reflection;
+
+import java.util.List;
 
 public abstract class BaseModel {
     @Id
@@ -27,6 +31,11 @@ public abstract class BaseModel {
     }
 
     public void removeIter() {
-        DBConnection.getDatastore().delete(this);
+        remove();
+    }
+
+    public static long getSize(){
+        return DBConnection.getDatastore().createQuery(Reflection.getCallerClass())
+                .getCollection().count();
     }
 }

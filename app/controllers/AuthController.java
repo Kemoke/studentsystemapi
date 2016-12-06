@@ -2,10 +2,7 @@ package controllers;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import models.Admin;
-import models.Instructor;
-import models.Student;
-import models.User;
+import models.*;
 import org.mindrot.jbcrypt.BCrypt;
 import play.libs.Json;
 import play.mvc.BodyParser;

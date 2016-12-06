@@ -11,7 +11,7 @@ import services.DBConnection;
 import java.util.List;
 
 @Entity
-public class Student extends User{
+public class Student extends User {
     @Indexed()
     private String studentID;
     private int semester;
@@ -76,13 +76,13 @@ public class Student extends User{
         this.cgpa = cgpa;
     }
 
-    public static List<Student> getAll(){
+    public static List<Student> getAll() {
         return DBConnection.getDatastore()
                 .createQuery(Student.class)
                 .asList();
     }
 
-    public static List<Student> getAllWithField(String field, String value){
+    public static List<Student> getAllWithField(String field, String value) {
         return DBConnection.getDatastore()
                 .createQuery(Student.class)
                 .field(field)
@@ -90,17 +90,17 @@ public class Student extends User{
                 .asList();
     }
 
-    public static Student findByID(String id){
+    public static Student findByID(String id) {
         return DBConnection.getDatastore()
                 .get(Student.class, new ObjectId(id));
     }
 
-    public static Student findByID(ObjectId id){
+    public static Student findByID(ObjectId id) {
         return DBConnection.getDatastore()
                 .get(Student.class, id);
     }
 
-    public static Student findByField(String field, String value){
+    public static Student findByField(String field, String value) {
         return DBConnection.getDatastore()
                 .createQuery(Student.class)
                 .field(field).equal(value)
@@ -112,14 +112,14 @@ public class Student extends User{
     }
 
     public void setDepartment(Department department) {
-        if(department == null){
+        if (department == null) {
             this.department.getStudents().remove(this);
             oldDepartment = this.department;
             this.department = null;
-        }else if(this.department == null){
+        } else if (this.department == null) {
             this.department = department;
             department.getStudents().add(this);
-        }else if(!this.department.getId().equals(department.getId())){
+        } else if (!this.department.getId().equals(department.getId())) {
             oldDepartment = this.department;
             this.department = department;
         } else {
@@ -129,16 +129,16 @@ public class Student extends User{
 
     @Override
     public void save() {
-        if(oldDepartment != null){
+        if (oldDepartment != null) {
             oldDepartment.getStudents().remove(this);
             oldDepartment.save();
-            if(department != null){
+            if (department != null) {
                 department.getStudents().add(this);
             }
             oldDepartment = null;
         }
         super.save();
-        if(this.department != null){
+        if (this.department != null) {
             this.department.save();
         }
     }
@@ -154,5 +154,18 @@ public class Student extends User{
         super.remove();
     }
 
+    public boolean register(Section section){
+        if(section.getStudents().size() >= section.getCapacity()){
+            return false;
+        }
+        sections.add(section);
+        section.getStudents().add(this);
+        return true;
+    }
+
+    public void unregister(Section section){
+        sections.remove(section);
+        section.getStudents().remove(this);
+    }
 
 }

@@ -54,4 +54,4 @@ POST /student/unregister        controllers.StudentActionController.unregister()
 # Map static resources from the /public folder to the /assets URL path
 GET     /news                   controllers.NewsController.newsList()
 POST    /news                   controllers.NewsController.getArticle()
-GET     /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET     /*file           controllers.Assets.versioned(path="/public", file: Asset)
