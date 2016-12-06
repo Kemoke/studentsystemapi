@@ -24,10 +24,9 @@ public class AuthController extends Controller {
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         String email = params.get("email")[0];
         String password = params.get("password")[0];
-        LoginCache cache = DBConnection.getLoginCache();
-        String userType = cache.getUserType(email);
-        if(userType != null && BCrypt.checkpw(password, cache.getUserPassword(email))){
-            TokenJson token = new TokenJson(makeToken(email), userType);
+        LoginCache.UserCache cache = DBConnection.getLoginCache().getUser(email);
+        if(cache != null && BCrypt.checkpw(password, cache.getPassword())){
+            TokenJson token = new TokenJson(makeToken(email), cache.getType());
             return ok(Json.toJson(token));
         }
         /*User user = Student.findByField("email", email);

@@ -28,25 +28,21 @@ public class LoginCache {
         }
     }
 
-    public String getUserType(String email) {
-        try {
-            return userCacheMap.get(email).type;
-        } catch (NullPointerException e) {
-            return null;
-        }
+    public UserCache getUser(String email) {
+        return userCacheMap.get(email);
     }
 
-    public String getUserPassword(String email) {
-        try {
-            return userCacheMap.get(email).password;
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    private class UserCache {
+    public class UserCache {
         private String password;
         private String type;
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getType() {
+            return type;
+        }
 
         private UserCache(String password, String type) {
             this.password = password;
