@@ -9,34 +9,39 @@ import java.util.Map;
 public class LoginCache {
     private Map<String, UserCache> userCacheMap;
 
-    public LoginCache(){
+    public LoginCache() {
         userCacheMap = new HashMap<>();
     }
 
-    public LoginCache(List<User> users){
+    public LoginCache(List<User> users) {
         super();
         fill(users);
     }
 
-    public void fill(List<User> users){
+    public void fill(List<User> users) {
         for (User user : users) {
             put(user);
         }
     }
 
-    public void put(User user){
-        if(user == null){
-            return;
-        }
+    public void put(User user) {
         userCacheMap.put(user.getEmail(), new UserCache(user.getPassword(), user.getClass().getSimpleName()));
     }
 
-    public String getUserType(String email){
-        return userCacheMap.get(email).type;
+    public String getUserType(String email) {
+        try {
+            return userCacheMap.get(email).type;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
-    public String getUserPassword(String email){
-        return userCacheMap.get(email).password;
+    public String getUserPassword(String email) {
+        try {
+            return userCacheMap.get(email).password;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     private class UserCache {
