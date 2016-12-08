@@ -29,21 +29,6 @@ public class AuthController extends Controller {
             TokenJson token = new TokenJson(makeToken(email), cache.getType());
             return ok(Json.toJson(token));
         }
-        /*User user = Student.findByField("email", email);
-        if(user != null && BCrypt.checkpw(password, user.getPassword())){
-            TokenJson token = new TokenJson(makeToken(user), "Student");
-            return ok(Json.toJson(token));
-        }
-        user = Instructor.findByField("email", email);
-        if(user != null && BCrypt.checkpw(password, user.getPassword())){
-            TokenJson token = new TokenJson(makeToken(user), "Instructor");
-            return ok(Json.toJson(token));
-        }
-        user = Admin.findByField("email", email);
-        if(user != null && BCrypt.checkpw(password, user.getPassword())){
-            TokenJson token = new TokenJson(makeToken(user), "Admin");
-            return ok(Json.toJson(token));
-        }*/
         return unauthorized("Invalid credentials");
     }
 

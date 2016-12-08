@@ -28,6 +28,10 @@ public class LoginCache {
         }
     }
 
+    public void clear(){
+        userCacheMap.clear();
+    }
+
     public UserCache getUser(String email) {
         return userCacheMap.get(email);
     }

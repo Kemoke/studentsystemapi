@@ -212,4 +212,22 @@ public class Section extends BaseModel {
     public void setSyllabusUri(String syllabusUri) {
         this.syllabusUri = syllabusUri;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Section section = (Section) o;
+
+        if (number != section.number) return false;
+        return course != null ? course.equals(section.course) : section.course == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = number;
+        result = 31 * result + (course != null ? course.hashCode() : 0);
+        return result;
+    }
 }

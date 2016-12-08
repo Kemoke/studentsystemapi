@@ -1,4 +1,4 @@
-package models;
+package util;
 
 public class Article {
     public String imgUrl;

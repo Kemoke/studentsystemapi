@@ -36,6 +36,20 @@ public class Student extends User {
         this.grades = grades;
     }
 
+    @JsonIgnore
+    public void setGrade(GradeType type, int score){
+        for (Grade grade : grades) {
+            if(grade.getGradeType().equals(type)){
+                grade.setScore(score);
+                return;
+            }
+        }
+        Grade grade = new Grade();
+        grade.setScore(score);
+        grade.setGradeType(type);
+        grades.add(grade);
+    }
+
     public List<Section> getSections() {
         return sections;
     }

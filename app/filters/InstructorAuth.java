@@ -6,6 +6,7 @@ import models.Instructor;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import services.DBConnection;
 import util.AuthUtilities;
 
 public class InstructorAuth extends Security.Authenticator{
@@ -15,8 +16,11 @@ public class InstructorAuth extends Security.Authenticator{
         try{
             Claims jwt = AuthUtilities.getToken(ctx);
             String email = jwt.getSubject();
-            Instructor admin = Instructor.findByField("email", email);
-            return admin.getEmail();
+            String type = DBConnection.getLoginCache().getUser(email).getType();
+            if(!type.equals("Instructor")){
+                return null;
+            }
+            return email;
         }catch (SignatureException | IllegalArgumentException | NullPointerException e){
             return null;
         }

@@ -95,4 +95,22 @@ public class GradeType extends BaseModel{
         section.save();
         super.remove();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GradeType gradeType = (GradeType) o;
+
+        return weight == gradeType.weight && (section != null ? section.equals(gradeType.section) : gradeType.section == null) && (name != null ? name.equals(gradeType.name) : gradeType.name == null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = section != null ? section.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + weight;
+        return result;
+    }
 }

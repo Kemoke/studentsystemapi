@@ -6,6 +6,7 @@ import models.Student;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
+import services.DBConnection;
 import util.AuthUtilities;
 
 public class StudentAuth extends Security.Authenticator{
@@ -15,9 +16,12 @@ public class StudentAuth extends Security.Authenticator{
         try{
             Claims jwt = AuthUtilities.getToken(ctx);
             String email = jwt.getSubject();
-            Student admin = Student.findByField("email", email);
-            return admin.getEmail();
-        }catch (SignatureException | IllegalArgumentException | NullPointerException e){
+            String type = DBConnection.getLoginCache().getUser(email).getType();
+            if(!type.equals("Student")){
+                return null;
+            }
+            return email;
+        } catch (SignatureException | IllegalArgumentException | NullPointerException e){
             return null;
         }
     }
