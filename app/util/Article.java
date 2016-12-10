@@ -1,8 +1,8 @@
 package util;
 
 public class Article {
-    public String imgUrl;
     public String link;
+    public String imgUri;
     public String text;
     public String title;
 }

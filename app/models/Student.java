@@ -9,6 +9,7 @@ import org.mongodb.morphia.annotations.Reference;
 import services.DBConnection;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Student extends User {
@@ -21,33 +22,18 @@ public class Student extends User {
     @JsonIgnoreProperties({"student", "students"})
     private List<Section> sections;
     @Embedded
-    @JsonIgnoreProperties({"student", "students"})
-    private List<Grade> grades;
+    private Map<GradeType, Integer> grades;
     @Reference
     @JsonIgnoreProperties({"student", "students"})
     private Department department;
     private Department oldDepartment;
 
-    public List<Grade> getGrades() {
+    public Map<GradeType, Integer> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<Grade> grades) {
+    public void setGrades(Map<GradeType, Integer> grades) {
         this.grades = grades;
-    }
-
-    @JsonIgnore
-    public void setGrade(GradeType type, int score){
-        for (Grade grade : grades) {
-            if(grade.getGradeType().equals(type)){
-                grade.setScore(score);
-                return;
-            }
-        }
-        Grade grade = new Grade();
-        grade.setScore(score);
-        grade.setGradeType(type);
-        grades.add(grade);
     }
 
     public List<Section> getSections() {

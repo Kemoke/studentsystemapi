@@ -55,7 +55,7 @@ public class InstructorActionController extends Controller {
         Map<String, String[]> params = request().body().asFormUrlEncoded();
         Student student = Student.findByID(params.get("studentId")[0]);
         GradeType type = GradeType.findByID(params.get("gradeTypeId")[0]);
-        student.setGrade(type, Integer.parseInt(params.get("score")[0]));
+        student.getGrades().put(type, Integer.valueOf(params.get("score")[0]));
         student.save();
         return ok(Json.toJson(student));
     }
