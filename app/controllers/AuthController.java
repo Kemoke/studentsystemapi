@@ -1,8 +1,10 @@
 package controllers;
 
 import cache.LoginCache;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import models.*;
 import org.mindrot.jbcrypt.BCrypt;
 import play.libs.Json;
@@ -11,8 +13,10 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.AppConfig;
 import services.DBConnection;
+import util.AuthUtilities;
 import util.TokenJson;
 
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -58,5 +62,18 @@ public class AuthController extends Controller {
                 .setExpiration(expDate)
                 .signWith(SignatureAlgorithm.HS256, AppConfig.JWTKey)
                 .compact();
+    }
+
+    public Result checkToken(){
+        try{
+            Claims jwt = Jwts.parser().setSigningKey(AppConfig.JWTKey)
+                    .parseClaimsJws(request().getHeader("X-Auth-Token")).getBody();
+            if(jwt.getExpiration().getTime() < Date.from(Instant.now()).getTime()){
+                return unauthorized();
+            }
+            return ok();
+        }catch (SignatureException | IllegalArgumentException | NullPointerException e){
+            return unauthorized();
+        }
     }
 }

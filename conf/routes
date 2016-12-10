@@ -1,6 +1,7 @@
 # Auth
 POST /auth/login                controllers.AuthController.login()
 POST /auth/register             controllers.AuthController.register()
+POST /auth/check                controllers.AuthController.checkToken()
 
 # CRUD routes #
 # Student routes
